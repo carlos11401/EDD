@@ -1,11 +1,11 @@
 package Persona
 
-type Cliente struct {
+type Client struct {
 	Id   int
 	Name string
 	Age  int
 }
 
-func New_Client(id int, name string, age int) *Cliente {
-	return &Cliente{id, name, age}
+func NewClient(id int, name string, age int) *Client {
+	return &Client{id, name, age}
 }

@@ -1,14 +1,13 @@
 package Estructura
 
 import (
-	"fmt"
-
 	"../Persona"
+	"fmt"
 )
 
 type Node struct {
 	next    *Node
-	persona *Persona.Cliente
+	persona *Persona.Client
 }
 
 type List struct {
@@ -17,17 +16,17 @@ type List struct {
 	count int
 }
 
-func New_Nodo(persona *Persona.Cliente) *Node {
+func NewNode(persona *Persona.Client) *Node {
 	return &Node{nil, persona}
 }
-func Insert(client *Persona.Cliente, list *List) {
-	var new *Node = New_Nodo(client)
+func Insert(client *Persona.Client, list *List) {
+	var newNode *Node = NewNode(client)
 	if list.first == nil {
-		list.first = new
-		list.last = new
+		list.first = newNode
+		list.last = newNode
 		list.count++
 	} else {
-		list.last.next = new
+		list.last.next = newNode
 		list.last = list.last.next
 		list.count++
 	}
@@ -43,6 +42,6 @@ func Print(list *List) {
 	}
 }
 
-func New_List() *List {
+func NewList() *List {
 	return &List{nil, nil, 0}
 }
