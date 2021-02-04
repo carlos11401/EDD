@@ -31,15 +31,22 @@ func Insert(client *Persona.Client, list *List) {
 		list.count++
 	}
 }
+func Delete(list *List) {
+	if list.first == nil {
+		fmt.Println("Empty List")
+	} else {
+		list.first = list.first.next
+		list.count--
+	}
+}
 
 func Print(list *List) {
 	aux := list.first
 	for aux != nil {
-		fmt.Println("id: ", aux.persona.Id)
-		fmt.Println("name: ", aux.persona.Name)
-		fmt.Println("age: ", aux.persona.Age)
+		fmt.Print("[", aux.persona.Name, " - ", aux.persona.Id, " - ", aux.persona.Age, "] -->")
 		aux = aux.next
 	}
+	fmt.Println()
 }
 
 func NewList() *List {

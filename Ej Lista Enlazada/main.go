@@ -10,6 +10,7 @@ func main() {
 	fmt.Println("///////////////// WELCOME ////////////////")
 	// create list
 	var list *Estructura.List = Estructura.NewList()
+
 	var selected string
 	for selected != "close" {
 		fmt.Print("--> ")
@@ -31,6 +32,9 @@ func main() {
 			Estructura.Insert(cli, list)
 			Estructura.Print(list)
 
+		case "delete":
+			Estructura.Delete(list)
+			Estructura.Print(list)
 		case "print":
 			Estructura.Print(list)
 		}
