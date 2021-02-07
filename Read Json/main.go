@@ -7,12 +7,21 @@ import (
 )
 
 type File struct {
-	Database struct {
-		Host string `json: "host"`
-		Port int    `json:"port"`
-	} `json:"database`
-	Host string `json: "host"`
-	Port int    `json:"port"`
+	// List of dates
+	Dates []struct {
+		Index string `json:"Indice"`
+		// list of Departments
+		Department []struct {
+			Name string `json:"Nombre"`
+			// list of Stores
+			Store []struct {
+				Name          string `json:"Nombre"`
+				Description   string `json:"Descripcion"`
+				Contact       string `json:"Contacto"`
+				Qualification int    `json:"Calificacion"`
+			} `json:"Tiendas"`
+		} `json:"Departamentos"`
+	} `json:"Datos"`
 }
 
 func LoadFile(fileName string) (File, error) {
@@ -28,7 +37,7 @@ func LoadFile(fileName string) (File, error) {
 }
 
 func main() {
-	fmt.Println("Starting the Aplication")
+	fmt.Println("Starting the Application")
 	file, _ := LoadFile("file.json")
 	fmt.Println(file)
 }

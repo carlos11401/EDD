@@ -1,8 +1,29 @@
 {
-  "database": {
-    "host": "localhost db",
-    "port":3000
-  },
-  "host": "localhost",
-  "port":8000
+  "Datos":[
+    {
+      "Indice": "A",
+      "Departamentos":[
+        {
+          "Nombre": "Deportes",
+          "Tiendas":[
+            {
+              "Nombre": "Aurora",
+              "Descripcion": "Es una empresa multinacional",
+              "Contacto": "5544-3377",
+              "Calificacion": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Indice": "B",
+      "Departamentos":[
+        {
+          "Nombre": "Deportes B",
+          "Tiendas": []
+        }
+      ]
+    }
+  ]
 }
