@@ -108,34 +108,10 @@ func Insertar_Matriz(matriz *Matriz,fila int, columna int, valor string) {
 		}
 	}else
 	// ******************** Row && Col ********************
-	if boolNewCol == false && boolNewRow == false{
-		// ------- COL last and ROW last -------
-		if encColumna == matriz.EncColumna.Ultimo && encFila == matriz.EncFila.Ultimo{
-			// Roaming Row
-			actualNodeRow := encFila.Acceso
-			for actualNodeRow != nil{
-				if actualNodeRow.Derecha == nil{
-					// linking last node of ROW with newNodo
-					actualNodeRow.Derecha = newNode
-					newNode.Izquierda = actualNodeRow
-					break
-				}
-				actualNodeRow = actualNodeRow.Derecha
-			}
-			// Roaming Col
-			actualNodeCol := encColumna.Acceso
-			for actualNodeCol != nil{
-				if actualNodeCol.Abajo == nil{
-					// linking last node of Col with newNode
-					actualNodeCol.Abajo = newNode
-					newNode.Arriba = actualNodeRow
-					break
-				}
-				actualNodeCol = actualNodeCol.Abajo
-			}
-		}else
+	if boolNewCol == false && boolNewRow == false {
+	// ------------------ CORNERS ----------------------
 		// ------- COL first and ROW first -------
-		if encColumna == matriz.EncColumna.Primero && encFila == matriz.EncFila.Primero{
+		if encColumna == matriz.EncColumna.Primero && encFila == matriz.EncFila.Primero {
 			// linking newNode with Node Access of ROW
 			encFila.Acceso.Izquierda = newNode
 			newNode.Derecha = encFila.Acceso
@@ -147,16 +123,65 @@ func Insertar_Matriz(matriz *Matriz,fila int, columna int, valor string) {
 			encFila.Acceso = newNode
 			// access of Col is newNode
 			encColumna.Acceso = newNode
-		}else
-		// ------- COL first and ROW first -------
-		if encColumna == matriz.EncColumna.Primero{
-			//
+		}
+		// ------- COL last and ROW last -------
+		if encColumna == matriz.EncColumna.Ultimo && encFila == matriz.EncFila.Ultimo {
+			// Roaming Row
+			actualNodeRow := encFila.Acceso
+			for actualNodeRow != nil {
+				if actualNodeRow.Derecha == nil {
+					// linking last node of ROW with newNodo
+					actualNodeRow.Derecha = newNode
+					newNode.Izquierda = actualNodeRow
+					break
+				}
+				actualNodeRow = actualNodeRow.Derecha
+			}
+			// Roaming Col
 			actualNodeCol := encColumna.Acceso
-			for actualNodeCol != nil{
-				if actualNodeCol.Fila < newNode.Fila && newNode.Fila < actualNodeCol.Abajo.Fila{
-
+			for actualNodeCol != nil {
+				if actualNodeCol.Abajo == nil {
+					// linking last node of Col with newNode
+					actualNodeCol.Abajo = newNode
+					newNode.Arriba = actualNodeRow
+					break
 				}
 				actualNodeCol = actualNodeCol.Abajo
+			}
+		} else
+		// ------- Row last and COL first -------
+		if encFila == matriz.EncFila.Ultimo && encColumna == matriz.EncColumna.Primero{
+			// linking access of Row with newNode
+			encFila.Acceso.Izquierda = newNode
+			newNode.Derecha = encFila.Acceso
+			encFila.Acceso = newNode
+			// Roaming col
+			actualNodeCol := encColumna.Acceso
+			for actualNodeCol != nil{
+				if actualNodeCol.Abajo == nil{
+					// linking last node of col with newNode
+					actualNodeCol.Abajo = newNode
+					newNode = actualNodeCol
+					break
+				}
+				actualNodeCol = actualNodeCol.Abajo
+			}
+		}else
+		// ------- Row first and COL last -------
+		if encFila == matriz.EncFila.Primero && encColumna == matriz.EncColumna.Ultimo{
+			// linking access of Col with newNode
+			encColumna.Acceso.Arriba = newNode
+			newNode.Abajo = encColumna.Acceso
+			encColumna.Acceso = newNode
+			// Roam row
+			acutalNodeRow := encFila.Acceso
+			for acutalNodeRow != nil{
+				if acutalNodeRow.Derecha == nil{
+					acutalNodeRow.Derecha = newNode
+					newNode.Izquierda = acutalNodeRow
+					break
+				}
+				acutalNodeRow = acutalNodeRow.Derecha
 			}
 		}
 	}
