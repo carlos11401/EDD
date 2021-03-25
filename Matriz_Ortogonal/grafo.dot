@@ -1,0 +1,26 @@
+digraph G{ 
+node[shape=box, style=filled, color=deepskyblue3];
+edge[color=black];
+rankdir=UD;
+{rank=min; Matriz;"0xc000004500";"0xc000004540";"0xc000004580";"0xc0000045c0";};
+
+"0xc000004500"[label="1"];
+"0xc000004540"[label="2"];
+"0xc000004580"[label="3"];
+"0xc0000045c0"[label="4"];
+"0xc0000044e0"[label = "1"];
+"0xc000004520"[label = "2"];
+"0xc000004560"[label = "3"];
+"0xc0000045a0"[label = "4"];
+Matriz ->"0xc000004500";
+"0xc000004500" -> "0xc000004540";
+"0xc000004540" -> "0xc000004580";
+"0xc000004580" -> "0xc0000045c0";
+Matriz ->"0xc0000044e0";
+"0xc0000044e0" -> "0xc000004520";
+"0xc000004520" -> "0xc000004560";
+"0xc000004560" -> "0xc0000045a0";
+
+
+
+}
