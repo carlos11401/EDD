@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="68b2b32e-e7ea-46de-bd8c-e9cc1b3fcd6e" name="Default Changelist" comment="" />
+    <list default="true" id="68b2b32e-e7ea-46de-bd8c-e9cc1b3fcd6e" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../API rest/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../API rest/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../AVL/Graph.go" beforeDir="false" afterPath="$PROJECT_DIR$/../AVL/Graph.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../AVL/grafo.dot" beforeDir="false" afterPath="$PROJECT_DIR$/../AVL/grafo.dot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../AVL/grafo.png" beforeDir="false" afterPath="$PROJECT_DIR$/../AVL/grafo.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../AVL/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../AVL/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Estructura/matriz.go" beforeDir="false" afterPath="$PROJECT_DIR$/Estructura/matriz.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Read Json/file.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Read Json/file.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Read Json/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../Read Json/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../writeJSON/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../writeJSON/main.go" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

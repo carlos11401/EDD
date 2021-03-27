@@ -1,18 +1,19 @@
 package Estructura
 
 import (
-	// "fmt"
+// "fmt"
 )
+
 type Matriz struct {
-	EncFila *Encabezado 
+	EncFila    *Encabezado
 	EncColumna *Encabezado
 }
 
-func New_Matriz() *Matriz{
-	return &Matriz{New_Encabezado(),New_Encabezado()}
+func New_Matriz() *Matriz {
+	return &Matriz{New_Encabezado(), New_Encabezado()}
 }
 
-func Insertar_Matriz(matriz *Matriz,fila int, columna int, valor string) {
+func Insertar_Matriz(matriz *Matriz, fila int, columna int, valor string) {
 
 	//Se crea un newNode nodo con el valor ingresado
 	newNode := New_Nodo(fila, columna, valor)
@@ -41,33 +42,33 @@ func Insertar_Matriz(matriz *Matriz,fila int, columna int, valor string) {
 			newNod.Derecha = encFila.Acceso
 			encFila.Acceso = newNod
 		} else if encColumna == matriz.EncColumna.Ultimo {
-			newNode := encColumna.Acceso
+			newNod := encColumna.Acceso
 			aux := encFila.Acceso
 			for aux != nil {
 				if aux.Derecha == nil {
-					aux.Derecha = newNode
-					newNode.Izquierda = aux
+					aux.Derecha = newNod
+					newNod.Izquierda = aux
 					break
 				}
 				aux = aux.Derecha
 			}
 		} else {
-			newNode := encColumna.Acceso
+			newNod := encColumna.Acceso
 			aux := encFila.Acceso
 			for aux != nil {
-				if aux.Columna < newNode.Columna && newNode.Columna < aux.Derecha.Columna {
+				if aux.Columna < newNod.Columna && newNod.Columna < aux.Derecha.Columna {
 					// link with right node
-					aux.Derecha.Izquierda = newNode
-					newNode.Derecha = aux.Derecha
+					aux.Derecha.Izquierda = newNod
+					newNod.Derecha = aux.Derecha
 					// link with left node
-					aux.Derecha = newNode
-					newNode.Izquierda = aux
+					aux.Derecha = newNod
+					newNod.Izquierda = aux
 					break
 				}
 				aux = aux.Derecha
 			}
 		}
-	}else
+	} else
 	// ******************** newRow && Col ********************
 	// if there's a new Row and Col is one of the matrix
 	if boolNewRow == true && boolNewCol == false {
@@ -106,10 +107,10 @@ func Insertar_Matriz(matriz *Matriz,fila int, columna int, valor string) {
 				aux = aux.Abajo
 			}
 		}
-	}else
+	} else
 	// ******************** Row && Col ********************
 	if boolNewCol == false && boolNewRow == false {
-	// ------------------ CORNERS ----------------------
+		// ------------------ CORNERS ----------------------
 		// ------- COL first and ROW first -------
 		if encColumna == matriz.EncColumna.Primero && encFila == matriz.EncFila.Primero {
 			// linking newNode with Node Access of ROW
@@ -150,15 +151,15 @@ func Insertar_Matriz(matriz *Matriz,fila int, columna int, valor string) {
 			}
 		} else
 		// ------- Row last and COL first -------
-		if encFila == matriz.EncFila.Ultimo && encColumna == matriz.EncColumna.Primero{
+		if encFila == matriz.EncFila.Ultimo && encColumna == matriz.EncColumna.Primero {
 			// linking access of Row with newNode
 			encFila.Acceso.Izquierda = newNode
 			newNode.Derecha = encFila.Acceso
 			encFila.Acceso = newNode
 			// Roaming col
 			actualNodeCol := encColumna.Acceso
-			for actualNodeCol != nil{
-				if actualNodeCol.Abajo == nil{
+			for actualNodeCol != nil {
+				if actualNodeCol.Abajo == nil {
 					// linking last node of col with newNode
 					actualNodeCol.Abajo = newNode
 					newNode = actualNodeCol
@@ -166,22 +167,140 @@ func Insertar_Matriz(matriz *Matriz,fila int, columna int, valor string) {
 				}
 				actualNodeCol = actualNodeCol.Abajo
 			}
-		}else
+		} else
 		// ------- Row first and COL last -------
-		if encFila == matriz.EncFila.Primero && encColumna == matriz.EncColumna.Ultimo{
+		if encFila == matriz.EncFila.Primero && encColumna == matriz.EncColumna.Ultimo {
 			// linking access of Col with newNode
 			encColumna.Acceso.Arriba = newNode
 			newNode.Abajo = encColumna.Acceso
 			encColumna.Acceso = newNode
 			// Roam row
 			acutalNodeRow := encFila.Acceso
-			for acutalNodeRow != nil{
-				if acutalNodeRow.Derecha == nil{
+			for acutalNodeRow != nil {
+				if acutalNodeRow.Derecha == nil {
 					acutalNodeRow.Derecha = newNode
 					newNode.Izquierda = acutalNodeRow
 					break
 				}
 				acutalNodeRow = acutalNodeRow.Derecha
+			}
+		} else
+		// ------------------  EDGES   ----------------------
+		// -------  Up Edge  -------
+		if encFila == matriz.EncFila.Primero {
+			// Roam Row to search where insert the newNode
+			actualNodeRow := encFila.Acceso
+			for actualNodeRow != nil {
+				if actualNodeRow.Columna < newNode.Columna && newNode.Columna < actualNodeRow.Derecha.Columna {
+					// linking newNode <--> actualNode.Derecha
+					actualNodeRow.Derecha.Izquierda = newNode
+					newNode.Derecha = actualNodeRow.Derecha
+					// linking actualNode <--> newNode
+					actualNodeRow.Derecha = newNode
+					newNode.Izquierda = actualNodeRow
+					// linking newNode with node of down
+					encColumna.Acceso.Arriba = newNode
+					newNode.Abajo = encColumna.Acceso
+					// change access to newNode
+					encColumna.Acceso = newNode
+					break
+				}
+				actualNodeRow = actualNodeRow.Derecha
+			}
+		} else
+		// ------- Down Edge -------
+		if encFila == matriz.EncFila.Ultimo {
+			// Roam Row to search where insert the newNode
+			actualNodeRow := encFila.Acceso
+			for actualNodeRow != nil {
+				if actualNodeRow.Derecha != nil {
+					if actualNodeRow.Columna < newNode.Columna && newNode.Columna < actualNodeRow.Derecha.Columna {
+						// linking newNode <--> actualNode.Derecha
+						actualNodeRow.Derecha.Izquierda = newNode
+						newNode.Derecha = actualNodeRow.Derecha
+						// linking actualNode <--> newNode
+						actualNodeRow.Derecha = newNode
+						newNode.Izquierda = actualNodeRow
+						// linking newNode with node of Up
+						actualNodeCol := encColumna.Acceso
+						for actualNodeCol != nil {
+							if actualNodeCol.Abajo == nil {
+								actualNodeCol.Abajo = newNode
+								newNode.Arriba = actualNodeCol
+								break
+							}
+							actualNodeCol = actualNodeCol.Abajo
+						}
+						break
+					}
+				} else if newNode.Columna < actualNodeRow.Columna {
+					// linking actualNode <--> newNode
+					actualNodeRow.Izquierda = newNode
+					newNode.Derecha = actualNodeRow
+					encFila.Acceso = newNode
+					// linking newNode with node of Up
+					actualNodeCol := encColumna.Acceso
+					for actualNodeCol != nil {
+						if actualNodeCol.Abajo == nil {
+							actualNodeCol.Abajo = newNode
+							newNode.Arriba = actualNodeCol
+							break
+						}
+						actualNodeCol = actualNodeCol.Abajo
+					}
+					break
+				} else {
+					// linking actualNode <--> newNode
+					actualNodeRow.Derecha = newNode
+					newNode.Izquierda = actualNodeRow
+					// linking newNode with node of Up
+					actualNodeCol := encColumna.Acceso
+					for actualNodeCol != nil {
+						if actualNodeCol.Abajo == nil {
+							actualNodeCol.Abajo = newNode
+							newNode.Arriba = actualNodeCol
+							break
+						}
+						actualNodeCol = actualNodeCol.Abajo
+					}
+					break
+				}
+				actualNodeRow = actualNodeRow.Derecha
+			}
+		} else
+		// ------- Left Edge -------
+		if encColumna == matriz.EncColumna.Primero {
+			// Roam Col
+			actualNodeCol := encColumna.Acceso
+			for actualNodeCol != nil {
+				if actualNodeCol.Abajo != nil {
+					// search where have to insert newNode
+					if actualNodeCol.Fila < newNode.Fila && newNode.Fila < actualNodeCol.Abajo.Fila {
+						// linking newNode.Abajo with actualNode.Abajo
+						actualNodeCol.Abajo.Arriba = newNode
+						newNode.Abajo = actualNodeCol.Abajo
+						// linking newNode.Arriba with actualNode
+						actualNodeCol.Abajo = newNode
+						newNode.Arriba = actualNodeCol
+						// linking newNode.Derecha with encFila.Access
+						encFila.Acceso.Izquierda = newNode
+						newNode.Derecha = encFila.Acceso
+						// change access to newNode
+						encFila.Acceso = newNode
+						break
+					}
+				} else {
+					// linking newNode.Arriba with actualNode
+					actualNodeCol.Abajo = newNode
+					newNode.Arriba = actualNodeCol
+					// linking newNode.Derecha with encFila.Access
+					encFila.Acceso.Izquierda = newNode
+					newNode.Derecha = encFila.Acceso
+					// change access to newNode
+					encFila.Acceso = newNode
+					break
+				}
+				actualNodeCol = actualNodeCol.Abajo
 			}
 		}
 	}
