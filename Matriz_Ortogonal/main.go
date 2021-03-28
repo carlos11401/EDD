@@ -10,15 +10,14 @@ import (
 
 func main() {
 	matriz := Estructura.New_Matriz()
-	Estructura.Insertar_Matriz(matriz, 1, 1, "3")
+	Estructura.Insertar_Matriz(matriz, 1, 2, "4")
 	Estructura.Insertar_Matriz(matriz, 2, 3, "5")
-	Estructura.Insertar_Matriz(matriz, 1, 3, "10")
-	Estructura.Insertar_Matriz(matriz, 1, 2, "1")
-	Estructura.Insertar_Matriz(matriz, 2, 2, "4")
-	Estructura.Insertar_Matriz(matriz, 3, 1, "14")
-	Estructura.Insertar_Matriz(matriz, 3, 2, "15")
-	Estructura.Insertar_Matriz(matriz, 2, 1, "2")
-
+	Estructura.Insertar_Matriz(matriz, 1, 4, "6")
+	Estructura.Insertar_Matriz(matriz, 1, 3, "9")
+	Estructura.Insertar_Matriz(matriz, 2, 5, "7")
+	Estructura.Insertar_Matriz(matriz, 1, 5, "10")
+	Estructura.Insertar_Matriz(matriz, 2, 1, "11")
+	Estructura.Insertar_Matriz(matriz, 1, 1, "3")
 	//Estructura.Insertar_Matriz(matriz,4,2,"4")
 	//Estructura.Insertar_Matriz(matriz,3,3,"6")
 	//Estructura.Insertar_Matriz(matriz,4,1,"5")
@@ -34,6 +33,7 @@ func main() {
 		str += "\n"
 		nodeRow = nodeRow.Siguiente
 	}
+	str += "###############\n"
 	nodeCol := matriz.EncColumna.Primero
 	for nodeCol != nil {
 		node := nodeCol.Acceso
