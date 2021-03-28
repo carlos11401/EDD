@@ -138,5 +138,33 @@ func Insertar_Matriz(matriz *Matriz, fila int, columna int, valor string) {
 				actualNodeRow = actualNodeRow.Derecha
 			}
 		}
+		// --------- Move Pointers of Cols -----------
+		if newNode.Fila < encColumna.Acceso.Fila {
+			// insert newNode how first in the list of encColumna
+			newNode.Abajo = encColumna.Acceso
+			encColumna.Acceso.Arriba = newNode
+			encColumna.Acceso = newNode
+		} else {
+			actualNodeCol := encColumna.Acceso
+			for actualNodeCol != nil {
+				// if in here is because we have to insert in the last of list encColumna
+				if actualNodeCol.Abajo == nil {
+					actualNodeCol.Abajo = newNode
+					newNode.Arriba = actualNodeCol
+					break
+				} else
+				// find position to insert in middle of list of encColumna
+				if actualNodeCol.Fila < newNode.Fila && newNode.Fila < actualNodeCol.Abajo.Fila {
+					// link newNode with node that is down
+					newNode.Abajo = actualNodeCol.Abajo
+					actualNodeCol.Abajo.Arriba = newNode
+					// link newNode with node that is above
+					newNode.Arriba = actualNodeCol
+					actualNodeCol.Abajo = newNode
+					break
+				}
+				actualNodeCol = actualNodeCol.Abajo
+			}
+		}
 	}
 }
