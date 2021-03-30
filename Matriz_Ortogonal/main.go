@@ -2,6 +2,7 @@ package main
 
 import (
 	"./Estructura"
+	"./Grafo"
 	"fmt"
 	"strconv"
 )
@@ -14,8 +15,8 @@ func main() {
 	Estructura.Insertar_Matriz(matriz, 2, 3, "5")
 	Estructura.Insertar_Matriz(matriz, 1, 4, "6")
 	Estructura.Insertar_Matriz(matriz, 1, 3, "9")
-	Estructura.Insertar_Matriz(matriz, 2, 5, "7")
-	Estructura.Insertar_Matriz(matriz, 1, 5, "10")
+	//Estructura.Insertar_Matriz(matriz, 2, 5, "7")
+	//Estructura.Insertar_Matriz(matriz, 1, 5, "10")
 	Estructura.Insertar_Matriz(matriz, 2, 1, "11")
 	Estructura.Insertar_Matriz(matriz, 1, 1, "3")
 	Estructura.Insertar_Matriz(matriz, 3, 2, "20")
@@ -23,10 +24,8 @@ func main() {
 	Estructura.Insertar_Matriz(matriz, 2, 4, "22")
 	Estructura.Insertar_Matriz(matriz, 4, 1, "23")
 	Estructura.Insertar_Matriz(matriz, 2, 2, "33")
-	Estructura.Insertar_Matriz(matriz, 4, 5, "55")
-	//Estructura.Insertar_Matriz(matriz,4,2,"4")
-	//Estructura.Insertar_Matriz(matriz,3,3,"6")
-	//Estructura.Insertar_Matriz(matriz,4,1,"5")
+	//Estructura.Insertar_Matriz(matriz, 4, 5, "55")
+
 	nodeRow := matriz.EncFila.Primero
 	str := ""
 	for nodeRow != nil {
@@ -52,5 +51,5 @@ func main() {
 		nodeCol = nodeCol.Siguiente
 	}
 	fmt.Println(str)
-	//Grafo.GenerarMatriz(matriz)
+	Grafo.GenerarMatriz(matriz)
 }

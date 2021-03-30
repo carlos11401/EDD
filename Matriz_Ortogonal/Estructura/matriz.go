@@ -13,6 +13,32 @@ func New_Matriz() *Matriz {
 	return &Matriz{New_Encabezado(), New_Encabezado()}
 }
 
+func GetIndexAndRow(matrix *Matriz, id int) (int, *NodoEzdo) {
+	auxHeadRow := matrix.EncFila.Primero
+	count := 1
+	for auxHeadRow != nil {
+		if auxHeadRow.Id == id {
+			return count, auxHeadRow
+			break
+		}
+		count++
+		auxHeadRow = auxHeadRow.Siguiente
+	}
+	return 0, nil
+}
+func GetRowForIndex(matrix *Matriz, index int) *NodoEzdo {
+	auxHeadRow := matrix.EncFila.Primero
+	count := 1
+	for auxHeadRow != nil {
+		if count == index {
+			return auxHeadRow
+			break
+		}
+		count++
+		auxHeadRow = auxHeadRow.Siguiente
+	}
+	return nil
+}
 func Insertar_Matriz(matriz *Matriz, fila int, columna int, valor string) {
 
 	//Se crea un newNode nodo con el valor ingresado
