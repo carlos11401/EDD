@@ -3,14 +3,14 @@ package Tree
 import "fmt"
 
 type Tree struct {
-	root *Page
+	Root *Page
 }
 
 func NewTree() *Tree {
 	return &Tree{nil}
 }
 func (this *Tree) Insert(valor int) {
-	insert(&this.root, valor)
+	insert(&this.Root, valor)
 }
 func insert(root **Page, value int) {
 	subeArriba := false
@@ -19,7 +19,7 @@ func insert(root **Page, value int) {
 	Empujar(*root, value, &subeArriba, &median, &nd)
 	if subeArriba { //si se produjo una reorganizacion de nodos lo cual ser dividio la raiz entonces, la bandera sube_arriba lo indica
 		p := NewPage()
-		p.count = 1
+		p.Count = 1
 		p.Claves[1] = median
 		p.Branches[0] = *root
 		p.Branches[1] = nd
@@ -61,8 +61,8 @@ func DivideNode(actual *Page, value int, rd *Page, k int, median *int, nuevo **P
 		(*nuevo).Claves[i-posMedian] = actual.Claves[i]
 		(*nuevo).Branches[i-posMedian] = actual.Branches[i]
 	}
-	(*nuevo).count = (orden - 1) - posMedian /* numero de claves en el nuevo nodo*/
-	actual.count = posMedian                 // numero claves en el nodo origen
+	(*nuevo).Count = (orden - 1) - posMedian /* numero de claves en el nuevo nodo*/
+	actual.Count = posMedian                 // numero claves en el nodo origen
 
 	/* Es insertada la clave y rama en el nodo que le corresponde*/
 	if k <= orden/2 { //si k es menor al minimo de claves  que puede haber en la pagina
@@ -72,21 +72,21 @@ func DivideNode(actual *Page, value int, rd *Page, k int, median *int, nuevo **P
 	}
 
 	/* se extrae clave mediana del nodo origen*/
-	*median = actual.Claves[actual.count]
+	*median = actual.Claves[actual.Count]
 
 	/* Rama0 del nuevo nodo es la rama de la mediana*/
-	(*nuevo).Branches[0] = actual.Branches[actual.count]
-	actual.count--
+	(*nuevo).Branches[0] = actual.Branches[actual.Count]
+	actual.Count--
 }
 func PushLeaf(actual *Page, valor int, rd *Page, k int) {
 	/* desplza a la derecha los elementos para hcer un hueco*/
-	for i := actual.count; i >= k+1; i-- {
+	for i := actual.Count; i >= k+1; i-- {
 		actual.Claves[i+1] = actual.Claves[i]
 		actual.Branches[i+1] = actual.Branches[i]
 	}
 	actual.Claves[k+1] = valor
 	actual.Branches[k+1] = rd
-	actual.count++
+	actual.Count++
 }
 func SearchNode(actual *Page, valor int, k *int) bool {
 	/*tomar en cuenta que k es la direccion de las ramas por las que puede bajar la busqueda*/
@@ -96,7 +96,7 @@ func SearchNode(actual *Page, valor int, k *int) bool {
 		found = false
 	} else //examina las claves del nodo en orden descendente
 	{
-		*k = actual.count                             //desde la clave actual
+		*k = actual.Count                             //desde la clave actual
 		for (valor < actual.Claves[*k]) && (*k > 1) { //buscar una posicion hasta donde valor deje de ser menor ( por si vienen un valor menor a los que hay en el nodo )
 			*k--
 		}

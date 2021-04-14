@@ -5,7 +5,7 @@ const m = 5
 type Page struct {
 	Claves   [m]int
 	Branches [m]*Page
-	count    int
+	Count    int
 }
 
 func NewPage() *Page {
@@ -14,5 +14,5 @@ func NewPage() *Page {
 	return &Page{claves, branches, 0}
 }
 func FullPage(actual *Page) bool {
-	return actual.count == m-1
+	return actual.Count == m-1
 }
