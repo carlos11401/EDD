@@ -9,6 +9,8 @@ type Tree struct {
 func NewTree() *Tree {
 	return &Tree{nil}
 }
+
+// to insert
 func (this *Tree) Insert(valor int) {
 	insert(&this.Root, valor)
 }
@@ -103,4 +105,133 @@ func SearchNode(actual *Page, valor int, k *int) bool {
 		found = valor == actual.Claves[*k] //si la posicion encontrada es igual al valor ; lo cual clave repetida
 	}
 	return found
+}
+
+// to delete
+func (this *Tree) Delete(valor int) {
+	delete(&this.Root, valor)
+}
+func delete(root **Page, value int) {
+	found := false
+	deleteRegister(*root, value, &found)
+	if found {
+		if (*root).Count == 0 {
+			/* la raiz esta vacia, se libera el nodo*/
+			p := NewPage()
+			*p = **root
+			*root = (*root).Branches[0]
+		}
+	} // else la clave no esta en le arbol
+}
+func deleteRegister(actual *Page, value int, found *bool) {
+	var k int
+	if actual != nil {
+		*found = SearchNode(actual, value, &k)
+		if *found {
+			if actual.Branches[k-1] == nil {
+				quitar(actual, k)
+			} else {
+				sucesor(actual, k)
+				deleteRegister(actual.Branches[k], actual.Claves[k], found)
+			}
+		} else {
+			deleteRegister(actual.Branches[k], value, found)
+		}
+		if actual.Branches[k] != nil {
+			if actual.Branches[k].Count < m/2 {
+				restablecer(actual, k)
+			}
+		}
+	} else {
+		*found = false
+	}
+}
+func restablecer(actual *Page, k int) {
+	if k > 0 {
+		if actual.Branches[k-1].Count > m/2 {
+			moveRight(actual, k)
+		} else {
+			combine(actual, k)
+		}
+	} else {
+		if actual.Branches[1].Count > m/2 {
+			moveLeft(actual, 1)
+		} else {
+			combine(actual, 1)
+		}
+	}
+}
+func combine(actual *Page, k int) {
+	leftNode := NewPage()
+	q := NewPage()
+
+	q = actual.Branches[k]
+	leftNode = actual.Branches[k-1]
+
+	leftNode.Count++
+	leftNode.Claves[leftNode.Count] = actual.Claves[k]
+	leftNode.Branches[leftNode.Count] = q.Branches[0]
+
+	for j := 1; j <= q.Count; j++ {
+		leftNode.Count++
+		leftNode.Claves[leftNode.Count] = q.Claves[j]
+		leftNode.Branches[leftNode.Count] = q.Branches[j]
+	}
+	for j := k; j <= actual.Count-1; j++ {
+		actual.Claves[j] = actual.Claves[j+1]
+		actual.Branches[j] = actual.Branches[j+1]
+	}
+	actual.Count--
+}
+func moveLeft(actual *Page, k int) {
+	problemNode := NewPage()
+	rightNode := NewPage()
+	problemNode = actual.Branches[k-1]
+	rightNode = actual.Branches[k]
+
+	problemNode.Count++
+	problemNode.Claves[problemNode.Count] = actual.Claves[k]
+	problemNode.Branches[problemNode.Count] = rightNode.Branches[0]
+
+	actual.Claves[k] = rightNode.Claves[1]
+	rightNode.Branches[1] = rightNode.Branches[0]
+	rightNode.Count--
+
+	for i := 1; i <= rightNode.Count; i++ {
+		rightNode.Claves[i] = rightNode.Claves[i+1]
+		rightNode.Branches[i] = rightNode.Branches[i+1]
+	}
+}
+func moveRight(actual *Page, k int) {
+	problemNode := NewPage()
+	leftNode := NewPage()
+	problemNode = actual.Branches[k]
+	leftNode = actual.Branches[k-1]
+	for j := problemNode.Count; j >= 1; j-- {
+		problemNode.Claves[j+1] = problemNode.Claves[j]
+		problemNode.Branches[j+1] = problemNode.Branches[j]
+	}
+	problemNode.Count++
+	problemNode.Branches[1] = problemNode.Branches[0]
+
+	problemNode.Claves[1] = actual.Claves[k]
+
+	actual.Claves[k] = leftNode.Claves[leftNode.Count]
+	problemNode.Branches[0] = leftNode.Branches[leftNode.Count]
+	leftNode.Count--
+}
+func sucesor(actual *Page, k int) {
+	q := NewPage()
+	q = actual.Branches[k]
+	for q.Branches[0] != nil {
+		q = q.Branches[0]
+	}
+	actual.Claves[k] = q.Claves[1]
+}
+func quitar(actual *Page, k int) {
+	for j := k + 1; j <= actual.Count; j++ {
+		actual.Claves[j-1] = actual.Claves[j]
+		actual.Branches[j-1] = actual.Branches[j]
+	}
+	actual.Count--
 }
