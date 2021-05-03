@@ -5,11 +5,10 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"strconv"
 )
 
 func (thisTree *Tree) GenerateGraph() {
-	dotStructure := "digraph G{\nnode [shape=circle];\n"
+	dotStructure := "digraph G{\nnode [shape=rectangle];\n"
 	accum := ""
 
 	if thisTree.root != nil {
@@ -60,7 +59,16 @@ func (thisTree *Tree) GenerateGraph() {
 func RoamTree(actual **Node, acum *string) {
 	if *actual != nil {
 		//SE OBTIENE INFORMACION DEL NODO ACTUAL
-		*acum += "\"" + fmt.Sprint(&(*actual)) + "\"[label=\"" + strconv.Itoa((*actual).valor) + "\"];\n"
+		text, countRows := "", 0
+		// just get value of 20 chars for row
+		for countRows < 4 && len((*actual).value) > (countRows+1)*20 {
+			text += (*actual).value[countRows*20:(countRows+1)*20] + "\n"
+			countRows++
+		}
+		if countRows == 0 {
+			text = (*actual).value
+		}
+		*acum += "\"" + fmt.Sprint(&(*actual)) + "\"[label=\"" + text + "\"];\n"
 		//VIAJAMOS A LA SUBRAMA IZQ
 		if (*actual).left != nil {
 			*acum += "\"" + fmt.Sprint(&(*actual)) + "\" -> \"" + fmt.Sprint(&(*actual).left) + "\";\n"
