@@ -58,14 +58,10 @@ func (thisTree *Tree) GenerateGraph() {
 }
 func RoamTree(actual **Node, acum *string) {
 	if *actual != nil {
-		//SE OBTIENE INFORMACION DEL NODO ACTUAL
-		text, countRows := "", 0
-		// just get value of 20 chars for row
-		for countRows < 4 && len((*actual).value) > (countRows+1)*20 {
-			text += (*actual).value[countRows*20:(countRows+1)*20] + "\n"
-			countRows++
-		}
-		if countRows == 0 {
+		var text string
+		if len((*actual).value) >= 10 {
+			text = (*actual).value[:10]
+		} else {
 			text = (*actual).value
 		}
 		*acum += "\"" + fmt.Sprint(&(*actual)) + "\"[label=\"" + text + "\"];\n"
