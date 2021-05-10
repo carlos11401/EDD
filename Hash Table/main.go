@@ -12,14 +12,15 @@ var A = (math.Sqrt(5.0) - 1) / 2
 
 func main() {
 	table := NewTable(7, 60)
-	table.insert(100, 25)
-	table.insert(101, 25)
-	table.insert(35, 25)
-	table.insert(2, 25)
-	table.insert(1, 25)
-	table.insert(18, 25)
-	for i := 0; i < 11; i++ {
-		table.insert(18, i)
+	table.insert(11, 1)
+	table.insert(11, 2)
+	table.insert(11, 3)
+	table.insert(11, 4)
+	table.insert(11, 5)
+	table.insert(11, 1)
+	table.insert(11, 24)
+	for i := 0; i < 9; i++ {
+		table.insert(18+i, i)
 	}
 	table.print()
 }
@@ -40,47 +41,60 @@ func NewTable(size int, percentage int) *HashTable {
 	return &HashTable{size, 0, percentage, array}
 }
 func (thisHT *HashTable) insert(new int, value int) {
-	newNode := Node{new, value}
-	pos := thisHT.getPosition(new, value)
-	thisHT.array[pos] = &newNode
-	thisHT.charge++
-	actualPercentage := (thisHT.charge * 100) / thisHT.size
-	// see if we'll pass of allowed percentage that is 60%
-	if actualPercentage >= thisHT.percentage {
-		sizeNuevo := thisHT.size
-		foundSize := false
-		// search next prime number to thisHt.size
-		for !foundSize {
-			sizeNuevo += 2
-			i := 1
-			for i < sizeNuevo {
-				i++
-				mod := sizeNuevo % i
-				if mod == 0 {
-					break
-				}
-			}
-			if i == sizeNuevo {
-				foundSize = true
-			}
-		}
-		// create new array biggest
-		newArray := make([]*Node, sizeNuevo)
-		antique := thisHT.array
-		thisHT.array = newArray
-		thisHT.size = sizeNuevo
-		// pass all dates at new array
-		aux := 0
-		for i := 0; i < len(antique); i++ {
-			if antique[i] != nil {
-				aux = thisHT.getPosition(antique[i].hash, antique[i].value)
-				newArray[aux] = antique[i]
-			}
+	pos, repeated, inLoop := 0, false, false
+	pos, repeated, inLoop = thisHT.getPosition(new, value)
+	// inLoop is to verify that there's not position to insert after N iterations
+	if inLoop {
+		// so we magnify table and insert the new node
+		thisHT.magnifyTable()
+		pos, repeated, inLoop = thisHT.getPosition(new, value)
+	}
+	if !repeated {
+		newNode := Node{new, value}
+		thisHT.array[pos] = &newNode
+		thisHT.charge++
+
+		actualPercentage := (thisHT.charge * 100) / thisHT.size
+		// see if we'll pass of allowed percentage that is 60%
+		if actualPercentage >= thisHT.percentage {
+			thisHT.magnifyTable()
 		}
 	}
 }
-func (thisHT *HashTable) getPosition(clave int, valor int) int {
-	i, p, auxP, countReturn := 0, 0, 0, 0
+func (thisHT *HashTable) magnifyTable() {
+	newSize := thisHT.size
+	// search next prime number to thisHt.size
+loop:
+	for {
+		newSize += 2
+		i := 1
+		for i < newSize {
+			i++
+			if newSize%i == 0 {
+				if i == newSize { //verify if newSize is prime
+					break loop
+				} else {
+					break
+				}
+			}
+		}
+	}
+	// create new array biggest
+	newArray := make([]*Node, newSize)
+	antique := thisHT.array
+	thisHT.array = newArray
+	thisHT.size = newSize
+	// pass all dates at new array
+	aux := 0
+	for i := 0; i < len(antique); i++ {
+		if antique[i] != nil {
+			aux, _, _ = thisHT.getPosition(antique[i].hash, antique[i].value)
+			newArray[aux] = antique[i]
+		}
+	}
+}
+func (thisHT *HashTable) getPosition(clave int, valor int) (int, bool, bool) {
+	i, p, auxP, countReturn, repeated, inLoop := 0, 0, 0, 0, false, false
 	m := float64(len(thisHT.array)) // size of the table
 	k := float64(clave)
 	p = int(math.Floor(m * (k*A - math.Floor(k*A)))) // is the getPosition where como to insert new node
@@ -89,32 +103,22 @@ func (thisHT *HashTable) getPosition(clave int, valor int) int {
 	for thisHT.array[auxP] != nil && thisHT.array[auxP].value != valor {
 		i++
 		// new getPosition that increase quadratically
-		auxP = p + i*i
-		// see if i can insert after of getPosition (P) because i could pass other getPosition of the array major than len(Array)
-		if auxP > (len(thisHT.array) - 1) {
-			// calculate the value nearest to auxP
-			auxPivot := int(math.Floor(float64(auxP / len(thisHT.array)))) // approach down
-			// nearestP = auxPivot
-			newP := auxP - auxPivot*len(thisHT.array) - p
-			// see if i can insert after of getPosition (P) because i could pass other getPosition of the array major than len(Array)
-			if (p + newP) < len(thisHT.array) {
-				auxP = p + newP
-			} else {
-				aux := len(thisHT.array) - 1 - p
-				auxP = newP - aux - 1
-			}
-		}
-		// to resolve problem of loop, if doesn't find a getPosition where insert
+		auxP = int(math.Mod(float64(p+i*i), m)) // is the getPosition where como to insert new node
+		// to resolve problem of inLoop, if doesn't find a getPosition where insert
 		if auxP == p+1 {
 			countReturn++
-			// if this condition is TRUE, is because the collision into loop
+			// if this condition is TRUE, is because the collision into inLoop
 			if countReturn == 2 {
-				fmt.Println("there's not space where add new node, try change a key")
+				fmt.Println("in loop, i'm going to magnify table to resolve it :)")
+				inLoop = true
 				break
 			}
 		}
 	}
-	return auxP
+	if thisHT.array[auxP] != nil && thisHT.array[auxP].value == valor {
+		repeated = true
+	}
+	return auxP, repeated, inLoop
 }
 func (thisHT *HashTable) print() {
 	data := make([][]string, thisHT.size)
