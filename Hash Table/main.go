@@ -11,12 +11,14 @@ import (
 var A = (math.Sqrt(5.0) - 1) / 2
 
 func main() {
-	table := NewTable(7, 60)
-	table.insert(11, 1)
-	table.insert(11, 2)
-	table.insert(11, 3)
-	table.insert(11, 4)
-	table.insert(11, 5)
+	table := NewTable(7, 50)
+	table.insert(5814189346446, 1)
+	table.insert(5814189346446, 2)
+	table.insert(5814189346446, 3)
+	table.insert(5814189346446, 4)
+	table.insert(5814189346446, 4)
+	table.insert(5814189346446, 4)
+	table.insert(5814189346446, 5)
 	table.insert(11, 1)
 	table.insert(11, 24)
 	for i := 0; i < 9; i++ {
@@ -41,24 +43,21 @@ func NewTable(size int, percentage int) *HashTable {
 	return &HashTable{size, 0, percentage, array}
 }
 func (thisHT *HashTable) insert(new int, value int) {
-	pos, repeated, inLoop := 0, false, false
-	pos, repeated, inLoop = thisHT.getPosition(new, value)
+	pos, inLoop := 0, false
+	pos, inLoop = thisHT.getPosition(new, value)
 	// inLoop is to verify that there's not position to insert after N iterations
 	if inLoop {
 		// so we magnify table and insert the new node
 		thisHT.magnifyTable()
-		pos, repeated, inLoop = thisHT.getPosition(new, value)
+		pos, inLoop = thisHT.getPosition(new, value)
 	}
-	if !repeated {
-		newNode := Node{new, value}
-		thisHT.array[pos] = &newNode
-		thisHT.charge++
-
-		actualPercentage := (thisHT.charge * 100) / thisHT.size
-		// see if we'll pass of allowed percentage that is 60%
-		if actualPercentage >= thisHT.percentage {
-			thisHT.magnifyTable()
-		}
+	newNode := Node{new, value}
+	thisHT.array[pos] = &newNode
+	thisHT.charge++
+	actualPercentage := (thisHT.charge * 100) / thisHT.size
+	// see if we'll pass of allowed percentage that is 60%
+	if actualPercentage >= thisHT.percentage {
+		thisHT.magnifyTable()
 	}
 }
 func (thisHT *HashTable) magnifyTable() {
@@ -88,19 +87,19 @@ loop:
 	aux := 0
 	for i := 0; i < len(antique); i++ {
 		if antique[i] != nil {
-			aux, _, _ = thisHT.getPosition(antique[i].hash, antique[i].value)
+			aux, _ = thisHT.getPosition(antique[i].hash, antique[i].value)
 			newArray[aux] = antique[i]
 		}
 	}
 }
-func (thisHT *HashTable) getPosition(clave int, valor int) (int, bool, bool) {
-	i, p, auxP, countReturn, repeated, inLoop := 0, 0, 0, 0, false, false
+func (thisHT *HashTable) getPosition(clave int, valor int) (int, bool) {
+	i, p, auxP, countReturn, inLoop := 0, 0, 0, 0, false
 	m := float64(len(thisHT.array)) // size of the table
 	k := float64(clave)
 	p = int(math.Floor(m * (k*A - math.Floor(k*A)))) // is the getPosition where como to insert new node
 	auxP = p
 	// if there's a collision
-	for thisHT.array[auxP] != nil && thisHT.array[auxP].value != valor {
+	for thisHT.array[auxP] != nil {
 		i++
 		// new getPosition that increase quadratically
 		auxP = int(math.Mod(float64(p+i*i), m)) // is the getPosition where como to insert new node
@@ -115,10 +114,7 @@ func (thisHT *HashTable) getPosition(clave int, valor int) (int, bool, bool) {
 			}
 		}
 	}
-	if thisHT.array[auxP] != nil && thisHT.array[auxP].value == valor {
-		repeated = true
-	}
-	return auxP, repeated, inLoop
+	return auxP, inLoop
 }
 func (thisHT *HashTable) print() {
 	data := make([][]string, thisHT.size)
