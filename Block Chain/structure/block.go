@@ -3,7 +3,10 @@ package structure
 import (
 	"crypto/sha256"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
+	"log"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -68,18 +71,6 @@ func (thisL *List) GetIndexAndPreHash() (int, string) {
 		return thisL.Count, thisL.Last.Block.Hash
 	}
 }
-func (thisL *List) Print() {
-	aux := thisL.First
-	for aux != nil {
-		fmt.Println(strconv.Itoa(aux.Block.Index) + ".")
-		fmt.Println("     > PreHash: " + aux.Block.PreviousHash)
-		fmt.Println("     > Hash: " + aux.Block.Hash)
-		fmt.Println("     > Nonce: " + strconv.Itoa(aux.Block.Nonce))
-		fmt.Println("     > Date: " + aux.Block.Date)
-		fmt.Println("     > Data: " + aux.Block.Data)
-		aux = aux.Next
-	}
-}
 func (thisB *Block) GetSha256() string {
 	var str string
 	str = strconv.Itoa(thisB.Index) +
@@ -100,4 +91,76 @@ func (thisB *Block) MineBlock() {
 			break
 		}
 	}
+}
+func (thisL *List) Print() {
+	aux := thisL.First
+	for aux != nil {
+		fmt.Println(strconv.Itoa(aux.Block.Index) + ".")
+		fmt.Println("     > PreHash: " + aux.Block.PreviousHash)
+		fmt.Println("     > Hash: " + aux.Block.Hash)
+		fmt.Println("     > Nonce: " + strconv.Itoa(aux.Block.Nonce))
+		fmt.Println("     > Date: " + aux.Block.Date)
+		fmt.Println("     > Data: " + aux.Block.Data)
+		aux = aux.Next
+	}
+}
+
+type BlockChangeJSON struct {
+	Header []Block
+}
+
+func (thisL *List) SaveData() {
+	var blockChain BlockChangeJSON
+	aux := thisL.First
+	for aux != nil {
+		block := NewBlock(aux.Block.Data)
+		block.Index = aux.Block.Index
+		block.Date = aux.Block.Date
+		block.Nonce = aux.Block.Nonce
+		block.Hash = aux.Block.Hash
+		block.PreviousHash = aux.Block.PreviousHash
+		blockChain.Header = append(blockChain.Header, *block)
+		// convert to struct of JSON
+		jsonBlock, _ := json.MarshalIndent(block, "", "    ")
+		// path is where como to save
+		path := "Block Chain/block" + strconv.Itoa(block.Index) + ".json"
+		// if file exists i'm going to remove it
+		var _, err = os.Stat(path)
+		if !os.IsNotExist(err) {
+			err := os.Remove(path)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+		// create file
+		var file, _ = os.Create(path)
+		defer file.Close()
+		fmt.Println("Se ha creado un archivo")
+		// open file
+		var myFile, err2 = os.OpenFile(path, os.O_RDWR, 0644)
+		if existError(err2) {
+			return
+		}
+		defer myFile.Close()
+		// write in file
+		_, err = myFile.Write(jsonBlock)
+		if existError(err) {
+			return
+		}
+		// save changes
+		err = myFile.Sync()
+		if existError(err) {
+			return
+		}
+		fmt.Println("Archivo actualizado existosamente.")
+		aux = aux.Next
+	}
+
+}
+
+func existError(err error) bool {
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	return err != nil
 }
