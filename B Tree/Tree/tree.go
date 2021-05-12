@@ -1,16 +1,30 @@
 package Tree
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+	"log"
+	"os"
+)
 
 type Tree struct {
 	Root *Page
+}
+type allInfo struct {
+	All []*info
+}
+type info struct {
+	Num int
 }
 
 func NewTree() *Tree {
 	return &Tree{nil}
 }
+func NewAllInfo() *allInfo {
+	return &allInfo{nil}
+}
 
-// to insert
+// Insert to insert
 func (this *Tree) Insert(valor int) {
 	insert(&this.Root, valor)
 }
@@ -107,7 +121,7 @@ func SearchNode(actual *Page, valor int, k *int) bool {
 	return found
 }
 
-// to delete
+// Delete to delete
 func (this *Tree) Delete(valor int) {
 	delete(&this.Root, valor)
 }
@@ -234,4 +248,80 @@ func quitar(actual *Page, k int) {
 		actual.Branches[j-1] = actual.Branches[j]
 	}
 	actual.Count--
+}
+
+//
+func (this *Tree) SaveData() {
+	allInf := NewAllInfo()
+	if this.Root != nil {
+		contNodo := 0
+		var queue []*Page
+		queue = Enqueue(queue, this.Root)
+		for len(queue) != 0 {
+			tmp := queue[0]
+			queue = Dequeue(queue)
+			allInf.All = printCode(*tmp, allInf.All)
+			for i := 0; i <= tmp.Count; i++ {
+				if tmp.Branches[i] != nil {
+					queue = Enqueue(queue, tmp.Branches[i])
+				}
+			}
+			contNodo++
+		}
+	}
+	// convert to struct of JSON
+	jsonUser, _ := json.MarshalIndent(allInf, "", "	")
+	// path is where como to save
+	path := "B Tree/users.json"
+	// if file exists i'm going to remove it
+	var _, err = os.Stat(path)
+	if !os.IsNotExist(err) {
+		err := os.Remove(path)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	// create file
+	var file, _ = os.Create(path)
+	defer file.Close()
+	fmt.Println("Se ha creado un archivo")
+	// open file
+	var myFile, err2 = os.OpenFile(path, os.O_RDWR, 0644)
+	if existError(err2) {
+		return
+	}
+	defer myFile.Close()
+	// write in file
+	_, err = myFile.Write(jsonUser)
+	if existError(err) {
+		return
+	}
+	// save changes
+	err = myFile.Sync()
+	if existError(err) {
+		return
+	}
+	fmt.Println("Archivo actualizado existosamente.")
+}
+func Enqueue(queue []*Page, element *Page) []*Page {
+	queue = append(queue, element) // Simply append to Enqueue.
+	return queue
+}
+func Dequeue(queue []*Page) []*Page {
+	return queue[1:] // Slice off the element once it is dequeued.
+}
+func printCode(actual Page, listInfo []*info) []*info {
+	listAux := listInfo
+	for i := 1; i <= actual.Count; i++ {
+		var inf info
+		inf.Num = actual.Claves[i]
+		listAux = append(listAux, &inf)
+	}
+	return listAux
+}
+func existError(err error) bool {
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	return err != nil
 }

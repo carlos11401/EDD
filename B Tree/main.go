@@ -29,5 +29,6 @@ func main() {
 	tree.Insert(27)
 	tree.Delete(15)
 	Graph.GenerateGraph_BTree(tree.Root)
+	tree.SaveData()
 	fmt.Print(":)")
 }

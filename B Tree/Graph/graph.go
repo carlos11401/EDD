@@ -19,15 +19,15 @@ func GenerateGraph_BTree(root *Tree.Page) {
 		contAux := 0
 
 		var queue []*Tree.Page
-		queue = enqueue(queue, root)
+		queue = Enqueue(queue, root)
 
 		for len(queue) != 0 {
 			tmp := queue[0]
-			queue = dequeue(queue)
+			queue = Dequeue(queue)
 			printCode(*tmp, &acum, &contNodo, &contAux, &acumEnlace)
 			for i := 0; i <= tmp.Count; i++ {
 				if tmp.Branches[i] != nil {
-					queue = enqueue(queue, tmp.Branches[i])
+					queue = Enqueue(queue, tmp.Branches[i])
 				}
 			}
 			contNodo++
@@ -36,7 +36,7 @@ func GenerateGraph_BTree(root *Tree.Page) {
 	}
 	acum += "}\n"
 
-	path := "grafo.dot"
+	path := "B Tree/grafo.dot"
 	//SE ESCRIBE EL ARCHIVO .DOT
 	var _, err = os.Stat(path)
 	if os.IsNotExist(err) {
@@ -70,9 +70,9 @@ func GenerateGraph_BTree(root *Tree.Page) {
 
 	//PARTE EN DONDE GENERO EL GRAFO
 	path2, _ := exec.LookPath("dot")
-	cmd, _ := exec.Command(path2, "-Tpng", "grafo.dot").Output()
+	cmd, _ := exec.Command(path2, "-Tpng", "B Tree/grafo.dot").Output()
 	mode := int(0777)
-	ioutil.WriteFile("grafo.png", cmd, os.FileMode(mode))
+	ioutil.WriteFile("B Tree/grafo.png", cmd, os.FileMode(mode))
 }
 func printCode(actual Tree.Page, acum *string, contNodo *int, contAux *int, enlace *string) {
 	*acum += "node" + strconv.Itoa(*contNodo) + "[label=\""
@@ -104,11 +104,11 @@ func existError(err error) bool {
 }
 
 //
-func enqueue(queue []*Tree.Page, element *Tree.Page) []*Tree.Page {
-	queue = append(queue, element) // Simply append to enqueue.
+func Enqueue(queue []*Tree.Page, element *Tree.Page) []*Tree.Page {
+	queue = append(queue, element) // Simply append to Enqueue.
 	fmt.Println("Enqueued:", element)
 	return queue
 }
-func dequeue(queue []*Tree.Page) []*Tree.Page {
+func Dequeue(queue []*Tree.Page) []*Tree.Page {
 	return queue[1:] // Slice off the element once it is dequeued.
 }
